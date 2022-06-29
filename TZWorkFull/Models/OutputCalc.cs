@@ -8,5 +8,6 @@
         public decimal PercentagePart { get; set; }
         public decimal MainPart { get; set; }
         public decimal BalanceOwed { get; set; }
+        public decimal Overpayment { get; set; }
     }
 }
