@@ -1,0 +1,41 @@
+﻿@{
+    @model List<OutputCalc>
+    ViewData["Title"] = "График платежей";
+}
+<h1>@ViewData["Title"]</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th class="table-secondary" scope='row' >№</th>
+      <th class="table-secondary" scope="col">Дата платежа:</th>
+      <th class="table-secondary" scope="col">Сумма платежа:</th>
+      <th class="table-secondary" scope="col">Основной долг:</th>
+      <th class="table-secondary" scope="col">Проценты:</th>
+      <th class="table-secondary" scope="col">Остаток долга:</th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach (var outputCalc in @Model)
+{
+    <tr>
+        <td>
+            @outputCalc.Month
+        </td>
+                <td>
+            @outputCalc.Date
+        </td>
+        <td>
+            @outputCalc.MonthlyPayment
+        </td>
+        <td>
+            @outputCalc.MainPart
+        </td>
+        <td>
+            @outputCalc.PercentagePart
+        </td>
+        <td>
+            @outputCalc.BalanceOwed
+        </td>
+    </tr>
+}
+</table>
