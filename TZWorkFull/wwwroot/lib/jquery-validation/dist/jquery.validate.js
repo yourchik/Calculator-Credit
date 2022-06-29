@@ -376,7 +376,6 @@ $.extend( $.validator, {
 		max: $.validator.format("Введите число меньше или равное {0}."),
 		min: $.validator.format("Введите число больше или равное {0}."),
 		step: $.validator.format("Пожалуйста, введите число, кратное {0}.")
-		min: jQuery.format("Введите число больше или равное {0}.")
 	},
 
 	autoCreateRanges: false,
