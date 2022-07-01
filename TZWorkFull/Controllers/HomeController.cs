@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TZWorkFull.Models;    
-
+using System.Globalization;
+using TZWorkFull.Models;
 
 namespace TZWorkFull.Controllers
 {
@@ -21,42 +21,53 @@ namespace TZWorkFull.Controllers
         [HttpPost]
         public IActionResult Privacy(Input input)
         {
+            NumberFormatInfo test = new NumberFormatInfo()
+            {
+                NumberDecimalSeparator = "."
+            };
+            decimal interestRate;
+            try
+            {
+                interestRate = Convert.ToDecimal(input.InterestRate, test);
+            }
+            catch (Exception)
+            {
+                interestRate = 0;
+                ModelState.AddModelError("InterestRate", "Введите корректное значение");
+            }
             if (ModelState.IsValid)
             {
-                int Month = 0;
-                decimal creditSum = input.CreditSum;  //Сумма кредита
-                int creditMonth = input.CreditMonth;  //Кол-во месяцев
-                decimal interestRate = Convert.ToDecimal(input.InterestRate.Replace(".", ","));  //Ставка
-
-                decimal MonthlyRate = interestRate / 12 / 100;
-                decimal TotalRate = (decimal)Math.Pow((double)(1 + MonthlyRate), (double)creditMonth);
-                decimal MonthlyPayment = (creditSum * MonthlyRate * TotalRate) / (TotalRate - 1);
-                decimal BalanceOwed = creditSum;
-                decimal Overpayment = MonthlyPayment * creditMonth - creditSum;
+                int month = 0;
+                decimal monthlyRate = (interestRate / 12 / 100);
+                decimal totalRate = (decimal)Math.Pow((double)(1 + monthlyRate), (double)input.CreditMonth);
+                decimal monthlyPayment = (input.CreditSum * monthlyRate * totalRate) / (totalRate - 1);
+                decimal balanceOwed = input.CreditSum;
+                decimal overpayment = Math.Round((monthlyPayment * input.CreditMonth - input.CreditSum), 2);
 
                 DateTime datanow = DateTime.Today;
                 var datapay = datanow;
-
                 var values = new List<OutputCalc>();
 
-                for (int i = 0; i < creditMonth; i++)
+                for (int i = 0; i < input.CreditMonth; i++)
                 {
-                    decimal PercentagePart = BalanceOwed * MonthlyRate;  //Процентная часть
-                    decimal MainPart = MonthlyPayment - PercentagePart;  //Основная часть
-                    BalanceOwed -= MainPart;  // Остаток долга
-                    Month++;  //Месяца
+                    decimal percentagePart = balanceOwed * monthlyRate;  //Процентная часть
+                    decimal mainPart = monthlyPayment - percentagePart;  //Основная часть
+                    balanceOwed -= mainPart;  // Остаток долга
+                    month++;  //Месяца
                     datapay = datapay.AddMonths(1);  //Дата
                     var output = new OutputCalc
                     {
                         Date = datapay.ToString("d"),
-                        Month = Month,
-                        MonthlyPayment = Math.Round(MonthlyPayment, 2),
-                        PercentagePart = Math.Round(PercentagePart, 2),
-                        MainPart = Math.Round(MainPart, 2),
-                        BalanceOwed = Math.Round(BalanceOwed, 2)
+                        Month = month,
+                        MonthlyPayment = Math.Round(monthlyPayment, 2),
+                        PercentagePart = Math.Round(percentagePart, 2),
+                        MainPart = Math.Round(mainPart, 2),
+                        BalanceOwed = Math.Round(balanceOwed, 2),
                     };
                     values.Add(output);
                 }
+                ViewBag.overpayment = overpayment;
+                
                 return View("/Views/Home/Privacy.cshtml", values);
             }
             return View("/Views/Home/Index.cshtml", input);

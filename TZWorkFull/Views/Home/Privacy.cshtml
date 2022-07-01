@@ -1,12 +1,12 @@
-﻿@{
-    @model List<OutputCalc>
+﻿@model List<OutputCalc> 
+@{
     ViewData["Title"] = "График платежей";
 }
 <h1>@ViewData["Title"]</h1>
 <table class="table">
   <thead>
     <tr>
-      <th class="table-secondary" scope='row' >№</th>
+      <th class="table-secondary" scope='col' >№</th>
       <th class="table-secondary" scope="col">Дата платежа:</th>
       <th class="table-secondary" scope="col">Сумма платежа:</th>
       <th class="table-secondary" scope="col">Основной долг:</th>
@@ -38,4 +38,10 @@
         </td>
     </tr>
 }
+</table>
+<table class="table" style="width: 30%">
+    <tr>
+    <th class="table-secondary" scope='col' >Переплата по кредту:</th>
+    <td class="table-secondary" scope='col' > @ViewBag.overpayment</td>
+    </tr>
 </table>
