@@ -22,8 +22,8 @@
                 <span class="text-danger" asp-validation-for="SecondName"></span>
             </p>
             <p class="col-lg-2">
-                <label for="Number"> Номер телефона:</label><br />
-                <input class="form-control" type="number" asp-for="Number" placeholder="(912) 345-67-89" >
+                <label for="Number"> Номер телефона:</label><br />              
+                <input class="form-control" type="text" asp-for="Number" placeholder="8 (912) 345-67-89" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"> 
                 <span class="text-danger" asp-validation-for="Number"></span> 
             </p>
         </p> 
@@ -55,6 +55,16 @@
         </div>
     </form>
 </div>
+<style>
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+</style>
 @section Scripts
 {
     @{ <partial name = "_ValidationScriptsPartial"/>}
